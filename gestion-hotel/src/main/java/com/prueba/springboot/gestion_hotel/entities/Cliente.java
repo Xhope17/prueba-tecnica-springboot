@@ -1,4 +1,4 @@
-package com.prueba.springboot.gestion_hotel.models;
+package com.prueba.springboot.gestion_hotel.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -69,3 +69,4 @@ public class Cliente {
         this.telefono = telefono;
     }
 }
+

@@ -1,9 +1,13 @@
-package com.prueba.springboot.gestion_hotel.dtos;
+package com.prueba.springboot.gestion_hotel.models.DTOs;
 
 public class ClienteDto {
+    private Long id;
     private String nombre;
     private String correo;
     private String telefono;
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }

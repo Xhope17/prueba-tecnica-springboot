@@ -14,34 +14,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.prueba.springboot.gestion_hotel.models.DTOs.ClienteDto;
+import com.prueba.springboot.gestion_hotel.models.DTOs.EstadoDto;
 import com.prueba.springboot.gestion_hotel.response.GenericResponse;
-import com.prueba.springboot.gestion_hotel.services.ClienteService;
+import com.prueba.springboot.gestion_hotel.services.EstadoService;
 
 @RestController
-@RequestMapping("/api/clientes")
-public class ClienteController {
+@RequestMapping("/api/estados")
+public class EstadoController {
 
     @Autowired
-    private ClienteService clienteService;
-
-    @PostMapping
-    public ResponseEntity<GenericResponse<ClienteDto>> create(@RequestBody ClienteDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(clienteService.save(dto));
-    }
+    private EstadoService service;
 
     @GetMapping
-    public ResponseEntity<GenericResponse<List<ClienteDto>>> getAll() {
-        return ResponseEntity.ok(clienteService.getAll());
+    public ResponseEntity<GenericResponse<List<EstadoDto>>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<GenericResponse<EstadoDto>> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<GenericResponse<EstadoDto>> save(@RequestBody EstadoDto dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(dto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GenericResponse<ClienteDto>> update(@PathVariable Long id, @RequestBody ClienteDto dto) {
-        return ResponseEntity.ok(clienteService.update(id, dto));
+    public ResponseEntity<GenericResponse<EstadoDto>> update(@PathVariable Long id, @RequestBody EstadoDto dto) {
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<GenericResponse<Void>> delete(@PathVariable Long id) {
-        return ResponseEntity.ok(clienteService.delete(id));
+        return ResponseEntity.ok(service.delete(id));
     }
 }
