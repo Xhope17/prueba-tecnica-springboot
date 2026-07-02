@@ -23,7 +23,6 @@ public class Todo {
 
     private LocalDate dueDate;
 
-    // getters/setters, constructor vacío
     public Todo() {}
 
     public Todo(String title, boolean completed, Priority priority, LocalDate dueDate) {
@@ -33,7 +32,6 @@ public class Todo {
         this.dueDate = dueDate;
     }
 
-    // Getters & Setters...
     public Long getId() { return id; }
     public String getTitle() { return title; }
     public boolean isCompleted() { return completed; }

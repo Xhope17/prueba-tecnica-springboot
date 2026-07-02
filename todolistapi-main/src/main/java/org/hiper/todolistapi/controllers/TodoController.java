@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/todos")
@@ -26,14 +27,13 @@ public class TodoController {
     }
 
     @GetMapping
-    public Page<TodoResponse> list(
+    public ResponseEntity<Page<TodoResponse>> list(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "ASC") Sort.Direction direction
-    ) {
-        return service.list(page, size, sortBy, direction)
-                .map(TodoMapper::toResponse);
+            @RequestParam(defaultValue = "ASC") Sort.Direction direction) {
+        return ResponseEntity.ok(service.list(page, size, sortBy, direction)
+                .map(TodoMapper::toResponse));
     }
 
     @PostMapping
@@ -49,26 +49,42 @@ public class TodoController {
     }
 
     @GetMapping("/{id}")
-    public TodoResponse get(@PathVariable Long id) {
-        return TodoMapper.toResponse(service.get(id));
+    public ResponseEntity<TodoResponse> get(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(TodoMapper.toResponse(service.get(id)));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{id}")
-    public TodoResponse update(@PathVariable Long id, @Valid @RequestBody TodoRequest request) {
-        Todo entity = TodoMapper.toEntity(request);
-        return TodoMapper.toResponse(service.update(id, entity));
+    public ResponseEntity<TodoResponse> update(@PathVariable Long id, @Valid @RequestBody TodoRequest request) {
+        try {
+            Todo existing = service.get(id);
+            TodoMapper.updateEntity(existing, request);
+            return ResponseEntity.ok(TodoMapper.toResponse(service.update(id, existing)));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PatchMapping("/{id}/complete")
-    public TodoResponse complete(@PathVariable Long id) {
-        return TodoMapper.toResponse(
-                service.patch(id, t -> t.setCompleted(true))
-        );
+    public ResponseEntity<TodoResponse> complete(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(TodoMapper.toResponse(
+                    service.patch(id, t -> t.setCompleted(true))));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+        try {
+            service.delete(id);
+            return ResponseEntity.noContent().build();
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

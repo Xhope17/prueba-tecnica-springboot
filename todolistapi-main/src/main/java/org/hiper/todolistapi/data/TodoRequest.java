@@ -19,5 +19,4 @@ public class TodoRequest {
     private Priority priority = Priority.MEDIUM;
     private LocalDate dueDate;
 
-
 }

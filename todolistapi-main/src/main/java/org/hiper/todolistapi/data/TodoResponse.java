@@ -19,7 +19,6 @@ public class TodoResponse {
         this.dueDate = dueDate;
     }
 
-    // getters
     public Long getId() { return id; }
     public String getTitle() { return title; }
     public boolean isCompleted() { return completed; }
